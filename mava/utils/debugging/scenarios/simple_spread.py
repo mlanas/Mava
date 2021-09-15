@@ -114,8 +114,8 @@ class Scenario(BaseScenario):
             other_landmarks_pos.append(
                 world.landmarks[i].state.p_pos - agent.state.p_pos
             )
-
-        return np.concatenate(
+        
+        obs = np.concatenate(
             [agent.state.p_vel]
             + [agent.state.p_pos]
             + [[world.current_step / 50]]
@@ -123,6 +123,9 @@ class Scenario(BaseScenario):
             + other_agents_pos
             + other_landmarks_pos  # + comm
         )
+        obs_lenght = len(obs)
+
+        return np.concatenate([obs] + [np.zeros(100-obs_lenght)])
 
     def done(self, agent: Agent, world: World) -> bool:
         if world.current_step < 50:
