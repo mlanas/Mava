@@ -555,6 +555,12 @@ class MADDPGBaseTrainer(mava.Trainer):
             }
         return variables
 
+class EvaluationTrainer(MADDPGBaseTrainer):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def run(self, **kwargs):
+        time.sleep(9999999)
 
 class MADDPGDecentralisedTrainer(MADDPGBaseTrainer):
     """MADDPG trainer for a decentralised architecture."""
