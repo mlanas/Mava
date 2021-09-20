@@ -19,6 +19,7 @@
 from typing import Dict, List, Union
 
 import reverb
+import time
 import sonnet as snt
 import tensorflow as tf
 import tree
@@ -230,6 +231,12 @@ class MAD4PGBaseTrainer(MADDPGBaseTrainer):
                 self.policy_losses[agent] = tf.reduce_mean(policy_loss, axis=0)
         self.tape = tape
 
+class EvaluationTrainer(MAD4PGBaseTrainer):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def run(self, **kwargs):
+        time.sleep(9999999)
 
 class MAD4PGDecentralisedTrainer(MAD4PGBaseTrainer, MADDPGDecentralisedTrainer):
     """MAD4PG trainer for a decentralised architecture."""
