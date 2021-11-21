@@ -683,10 +683,10 @@ class MADDPGCentralisedTrainer(MADDPGBaseTrainer):
     ) -> Tuple[tf.Tensor, tf.Tensor, tf.Tensor, tf.Tensor]:
 
         # Centralised based
-        o_tm1_feed = tf.stack([o_tm1_trans[agent] for agent in self._agents], 1)
-        o_t_feed = tf.stack([o_t_trans[agent] for agent in self._agents], 1)
-        a_tm1_feed = tf.stack([a_tm1[agent] for agent in self._agents], 1)
-        a_t_feed = tf.stack([a_t[agent] for agent in self._agents], 1)
+        o_tm1_feed = tf.stack([o_tm1_trans[agent]] + [o_tm1_trans[loop_agent] for loop_agent in self._agents if loop_agent != agent], 1)
+        o_t_feed = tf.stack([o_t_trans[agent]] + [o_t_trans[loop_agent] for loop_agent in self._agents if loop_agent != agent], 1)
+        a_tm1_feed = tf.stack([a_tm1[agent]] + [a_tm1[loop_agent] for loop_agent in self._agents if loop_agent != agent], 1)
+        a_t_feed = tf.stack([a_t[agent]] + [a_t[loop_agent] for loop_agent in self._agents if loop_agent != agent], 1)
 
         return o_tm1_feed, o_t_feed, a_tm1_feed, a_t_feed
 
@@ -705,7 +705,7 @@ class MADDPGCentralisedTrainer(MADDPGBaseTrainer):
         dpg_a_t_feed[agent] = dpg_a_t
 
         dpg_a_t_feed = tf.squeeze(
-            tf.stack([dpg_a_t_feed[agent] for agent in self._agents], 1)
+            tf.stack([dpg_a_t_feed[agent]] + [dpg_a_t_feed[loop_agent] for loop_agent in self._agents if loop_agent != agent], 1)
         )
 
         return dpg_a_t_feed
